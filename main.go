@@ -6,20 +6,6 @@ import (
 	"go.uber.org/zap"
 )
 
-func handlePacket(packet gopacket.Packet) {
-	logger, _ := zap.NewProduction()
-
-	logger.Info("packet",
-		zap.String("src.ip", packet.NetworkLayer().NetworkFlow().Src().String()),
-		zap.String("src.port", packet.TransportLayer().TransportFlow().Src().String()),
-		zap.String("src.mac", packet.LinkLayer().LinkFlow().Src().String()),
-		zap.String("dst.ip", packet.NetworkLayer().NetworkFlow().Dst().String()),
-		zap.String("dst.port", packet.TransportLayer().TransportFlow().Dst().String()),
-		zap.String("dst.mac", packet.LinkLayer().LinkFlow().Dst().String()),
-	)
-
-}
-
 func main() {
 
 	logger, _ := zap.NewProduction()
@@ -34,7 +20,7 @@ func main() {
 			zap.String("msg", err.Error()),
 		)
 		panic(err)
-	} else if err := handle.SetBPFFilter("tcp and port 80"); err != nil {
+	} else if err := handle.SetBPFFilter("ip"); err != nil {
 		logger.Error("core",
 			zap.String("status", "err"),
 			zap.String("msg", err.Error()),
@@ -43,7 +29,14 @@ func main() {
 	} else {
 		packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 		for packet := range packetSource.Packets() {
-			handlePacket(packet)
+			logger.Info("packet",
+				zap.String("src.ip", packet.NetworkLayer().NetworkFlow().Src().String()),
+				zap.String("src.port", packet.TransportLayer().TransportFlow().Src().String()),
+				zap.String("src.mac", packet.LinkLayer().LinkFlow().Src().String()),
+				zap.String("dst.ip", packet.NetworkLayer().NetworkFlow().Dst().String()),
+				zap.String("dst.port", packet.TransportLayer().TransportFlow().Dst().String()),
+				zap.String("dst.mac", packet.LinkLayer().LinkFlow().Dst().String()),
+			)
 		}
 	}
 
