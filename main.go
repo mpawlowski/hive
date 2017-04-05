@@ -6,9 +6,20 @@ import (
 	"go.uber.org/zap"
 )
 
+/*
+NewLogger create a logger
+*/
+func NewLogger() (*zap.Logger, error) {
+	cfg := zap.NewProductionConfig()
+	cfg.OutputPaths = []string{
+		"/var/log/hive/hive.log",
+	}
+	return cfg.Build()
+}
+
 func main() {
 
-	logger, _ := zap.NewProduction()
+	logger, _ := NewLogger()
 
 	logger.Info("core",
 		zap.String("status", "started"),
@@ -36,6 +47,7 @@ func main() {
 				zap.String("dst.ip", packet.NetworkLayer().NetworkFlow().Dst().String()),
 				zap.String("dst.port", packet.TransportLayer().TransportFlow().Dst().String()),
 				zap.String("dst.mac", packet.LinkLayer().LinkFlow().Dst().String()),
+				zap.Int("bytes", len(packet.Data())),
 			)
 		}
 	}
