@@ -1,10 +1,9 @@
 # hive
-Go packet metadata capture.
-
-## dependencies
-  libpcap-dev
+Go packet metadata capture. Depends on `libpcap-dev`.
 
 ## build
-  go build
-  sudo ./hive &
-  sudo tail -f /var/log/hive/hive.log
+```
+go build
+sudo ./hive -i <interface> &
+sudo tail -f /var/log/hive/hive.log
+```

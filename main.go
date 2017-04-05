@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
 	"go.uber.org/zap"
@@ -19,13 +21,16 @@ func NewLogger() (*zap.Logger, error) {
 
 func main() {
 
+	iface := flag.String("i", "eth0", "network interface to capture")
+	flag.Parse()
+
 	logger, _ := NewLogger()
 
 	logger.Info("core",
 		zap.String("status", "started"),
 	)
 
-	if handle, err := pcap.OpenLive("eno1", 1600, true, pcap.BlockForever); err != nil {
+	if handle, err := pcap.OpenLive(*iface, 1600, true, pcap.BlockForever); err != nil {
 		logger.Error("core",
 			zap.String("status", "err"),
 			zap.String("msg", err.Error()),
