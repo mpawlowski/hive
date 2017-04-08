@@ -14,7 +14,7 @@ NewLogger create a logger
 func NewLogger() (*zap.Logger, error) {
 	cfg := zap.NewProductionConfig()
 	cfg.OutputPaths = []string{
-		"/var/log/hive/hive.log",
+		"stdout",
 	}
 	return cfg.Build()
 }

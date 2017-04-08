@@ -4,6 +4,5 @@ Go packet metadata capture. Depends on `libpcap-dev`.
 ## build
 ```
 go build
-sudo ./hive -i <interface> &
-sudo tail -f /var/log/hive/hive.log
+sudo ./hive -i <interface> | nc localhost 5000
 ```
