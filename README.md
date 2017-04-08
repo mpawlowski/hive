@@ -1,5 +1,5 @@
 # hive
-Go packet metadata capture. Depends on `libpcap-dev`.
+Network packet metadata logging. Depends on [libpcap-dev](https://packages.debian.org/search?keywords=libpcap-dev).
 
 ## build
 ```
