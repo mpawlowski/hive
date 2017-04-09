@@ -26,26 +26,30 @@ func main() {
 
 	logger, _ := NewLogger()
 
-	logger.Info("core",
-		zap.String("status", "started"),
-	)
-
 	if handle, err := pcap.OpenLive(*iface, 1600, true, pcap.BlockForever); err != nil {
-		logger.Error("core",
-			zap.String("status", "err"),
+		logger.Error("err",
 			zap.String("msg", err.Error()),
 		)
 		panic(err)
 	} else if err := handle.SetBPFFilter("ip"); err != nil {
-		logger.Error("core",
-			zap.String("status", "err"),
+		logger.Error("err",
 			zap.String("msg", err.Error()),
 		)
 		panic(err)
 	} else {
 		packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 		for packet := range packetSource.Packets() {
-			logger.Info("packet",
+
+			if packet.NetworkLayer() == nil || packet.TransportLayer() == nil || packet.LinkLayer() == nil {
+				logger.Error("err",
+					zap.String("msg", "null layer reference"),
+					zap.Int("bytes", len(packet.Data())),
+					zap.String("raw", packet.Dump()),
+				)
+				continue
+			}
+
+			logger.Info("ok",
 				zap.String("src.ip", packet.NetworkLayer().NetworkFlow().Src().String()),
 				zap.String("src.port", packet.TransportLayer().TransportFlow().Src().String()),
 				zap.String("src.mac", packet.LinkLayer().LinkFlow().Src().String()),
