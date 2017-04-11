@@ -26,7 +26,7 @@ func main() {
 
 	logger, _ := NewLogger()
 
-	if handle, err := pcap.OpenLive(*iface, 1600, true, pcap.BlockForever); err != nil {
+	if handle, err := pcap.OpenLive(*iface, 65535, true, pcap.BlockForever); err != nil {
 		logger.Error("err",
 			zap.String("msg", err.Error()),
 		)
