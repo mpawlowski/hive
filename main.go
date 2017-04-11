@@ -49,7 +49,7 @@ func main() {
 				continue
 			}
 
-			logger.Info("ok",
+			logger.Info("packet",
 				zap.String("src.ip", packet.NetworkLayer().NetworkFlow().Src().String()),
 				zap.String("src.port", packet.TransportLayer().TransportFlow().Src().String()),
 				zap.String("src.mac", packet.LinkLayer().LinkFlow().Src().String()),
