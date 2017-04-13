@@ -1,8 +1,19 @@
 # hive
 Network packet metadata logging. Depends on [libpcap-dev](https://packages.debian.org/search?keywords=libpcap-dev).
 
-## build
+## quickstart
+
+add logstash filter
+```
+filter {
+  json {
+    source => "message"
+  }
+}
+```
+
+send packets to logstash
 ```
 go build
-sudo ./hive -i <interface> | nc localhost 5000
+sudo ./hive -i <interface> | nc <host> <port>
 ```
